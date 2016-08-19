@@ -1,0 +1,54 @@
+https://saylani-web.firebaseapp.com/index.html
+https://console.firebase.google.com/project/saylani-web/overview
+
+
+
+// define variables and set to empty values
+$balance['SUM(per_head)'] = "";
+$_POST['submit_data'] = "";
+$_POST['date'] = $_POST['mpaid'] = $_POST['member'] = "";
+$date = $mpaid = $member = $select_member = "";
+$dateErr = $mSelectErr = $mpaidErr = $select_memberErr = "";
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
+  if (empty($_POST['select_member'])) {
+      $select_memberErr = "please select a member";
+  } else {
+      $select_member = test_input($_POST["select_member"]);
+  }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST['submit_data']") {  
+  if (empty($_POST["date"])) {
+    $dateErr = "Date is required";
+  } else {
+    $date = test_input($_POST["date"]);
+  }
+  
+  if (empty($_POST["member"])) {
+    $mSelectErr = "please select a member";
+  } else {
+    $member = test_input($_POST["member"]);
+  }
+  
+  if (empty($_POST["mapid"])) {
+    $mpaidErr = "please insert amount";
+  } else {
+    $mpaid = test_input($_POST["mpaid"]);
+  }     
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+
+
+57.<span class="error"><?php echo $select_memberErr ; ?></span>
+73.<span id="var_date" style="color:red;" class="error"><?php echo $dateErr?></span>
+87.<span id="var_mSelect" style="color:red;" class="error"><?php echo $mSelectErr?></span>
+93.<span id="var_mpaid" style="color:red;" class="error"><?php echo $mpaidErr ; ?></span>

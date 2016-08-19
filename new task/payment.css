@@ -1,0 +1,55 @@
+ body{
+     background-image: url(images/images1.jpg);
+     background-repeat: no-repeat;
+     background-size: 1280px 710px;
+    }
+.error {
+    color: #FF0000;
+} 
+.new_record{
+    color: #FF0000;
+    width: 35%;
+    float: right;
+}   
+.selected-member{
+        display: block;
+        background-color: #f7f7f7;
+        float: right;
+        height: 105px;
+        border-radius: 15px;
+        width: 100%; 
+    }
+.member-detail{   
+    width: 100%;
+    height: 120px; 
+}        
+.payment{
+    width:37%;
+    height: 150px;
+    background-color: #f7f7f7;
+    border-radius: 15px; 
+    float: right; 
+    }
+.payment-div{
+       width: 100%;
+       height: 150px;
+}    
+.header-bar{
+    background-color: skyblue;
+    margin-top: -10px;
+    height: 35px;
+    vertical-align: middle;
+    }
+.header-option{
+    text-align: left;
+    height: 25px;
+    width: 50px;
+    margin-left: 20px; 
+    }
+.header-bar .header-option > a{
+    margin-left: 5px;
+    }
+button{
+    width: 80px;
+    float: right;
+}
