@@ -14,7 +14,7 @@
     </div>
 
 <?php
-
+$_POST['date'] = $_POST['mpaid'] = $_POST['member'] = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
   if (empty($_POST['select_member'])) {
@@ -26,13 +26,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
 //fetch query
     $conn = mysqli_connect('localhost','root','','test');
             mysqli_select_db($conn,"test");
+            
     if(!empty($_POST['select_member'])){
+            
+            $query1 = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['select_member']."%'";
+            
+            $result1 = mysqli_query($conn,$query1);
+            $balance1 = mysqli_fetch_array($result1);
+            
+            if(empty($balance1['Balance'])){
             $query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_POST['select_member']."%'";
-    
-        $result = mysqli_query($conn,$query);
-        $balance = mysqli_fetch_array($result);                 
-    } else{
+            
+            $result = mysqli_query($conn,$query);
+            $balance = mysqli_fetch_array($result);
+
+            $balance['Balance'] = "";
+
+            } else {
+                $query = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['select_member']."%'";
+                
+                $result = mysqli_query($conn,$query);
+                $balance = mysqli_fetch_array($result);
+                
+                $balance['SUM(per_head)'] = "";
+
+            }                
+    } else {
         $balance['SUM(per_head)'] = "";
+        $balance['Balance'] = "";
     }
 ?>    
 
@@ -58,7 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
 <!--Fetch total amount of selected member-->
                         <td>Amount:</td>
                         <td style="text-align:center;"><b>
-                            <span><?php echo $balance['SUM(per_head)']; ?></span></b><td>
+                            <span><?php echo $balance['SUM(per_head)']; 
+                                        echo $balance['Balance']; ?></span></b><td>
                         <td style="width:50px;"></td>     
 <!--button of fetch amount-->
                         <td><button type="submit" name="fetch_amount" value="amount">Amount</button></td>
@@ -100,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
                         <tr>
 <!--insert amount -->
                             <td>Amount paid:</td>
-                            <td><input type="number" name="mpaid" id="mpaid"></td>
+                            <td><input type="text" name="mpaid" id="mpaid"></td>
                             <td></td>
                         </tr>    
                         <tr>
@@ -114,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
         </div>  
 
 <?php
-    if(isset($_POST['submit_data'])) {
+    if(!empty($_POST['date'] || $_POST['member'] || $_POST['mpaid'])) {
                     
                 $servername = "localhost";
                 $username = "root";
@@ -127,21 +149,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST['fetch_amount']") {
                         if ($conn->connect_error) {
                             die("Connection failed: " . $conn->connect_error);
                         }
-                                     
-                    $query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_POST['member']."%'";
-    
-                    $result = mysqli_query($conn,$query);
-                    $balance = mysqli_fetch_array($result);
+                                                         
+                    $query1 = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['member']."%'";
+            
+                    $result1 = mysqli_query($conn,$query1);
+                    $balance1 = mysqli_fetch_array($result1);
+                    
+                    if(empty($balance1['Balance'])){
+                        $query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_POST['member']."%'";
                         
-                    $sub = $balance['SUM(per_head)'] - $_POST['mpaid'] ;
-                     
-                    $fetch = "INSERT INTO payment_table(date, member_name, payment, paid, balance)
-                              VALUES ('".$_POST['date']."','".$_POST['member']."','".$balance['SUM(per_head)']."','".$_POST['mpaid']."','".$sub."')"; 
+                        $result = mysqli_query($conn,$query);
+                        $balance = mysqli_fetch_array($result);
+
+                        $balance['Balance'] = "";
+                        $payment = $balance['SUM(per_head)'];
+                        $sub = $balance['SUM(per_head)'] - $_POST['mpaid'] ;
+                        
+                        } else {
+                            $query = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['member']."%'";
+                            
+                            $result = mysqli_query($conn,$query);
+                            $balance = mysqli_fetch_array($result);
+                            
+                            $balance['SUM(per_head)'] = "";
+                            $payment = $balance['Balance'];
+                            $sub = $balance1['Balance'] - $_POST['mpaid'] ;
+                        }                
+                                
+                    $insert = "INSERT INTO payment_table(date, member_name, payment, paid, balance)
+                              VALUES ('".$_POST['date']."','".$_POST['member']."','".$payment."','".$_POST['mpaid']."','".$sub."')"; 
                     $fetch = "UPDATE selected_members SET Balance = '".$sub."'
                               WHERE User = '".$_POST['member']."' ";
                         
+             if ($conn->query($insert) === TRUE) {    
+                    echo "New record created";  
+             } else {
+		        echo "Error: " . $fetch . "<br>" . $conn->error;
+		     }
+             echo "<br>";
              if ($conn->query($fetch) === TRUE) {    
-                    echo "New record created in system";  
+                    echo "New record updated in member's account";  
              } else {
 		        echo "Error: " . $fetch . "<br>" . $conn->error;
 		     }       
