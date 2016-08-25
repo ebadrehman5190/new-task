@@ -7,7 +7,7 @@
     }
     .header-bar-color{
         background-color: lightblue;
-        height: 32px;
+        height: 25px;
     }
     .header-bar{
         margin-left: 8px;
@@ -24,6 +24,7 @@
        /* margin-left:5px;*/
         text-align:left;
         display: fixed;
+        height: 32px;
     }       	 
 	body {
 	background-image: url("images/images.jpg");
@@ -42,30 +43,27 @@
 	 margin-left:850px; 
 	 margin-top:50px;
 	 }
-    .menu .header-bar-color .header-bar .history .history-tab > a:hover,
-    .menu .header-bar-color .header-bar .history .member-tab > a:hover,
-    .menu .header-bar-color .header-bar .history .payment-detail-tab > a:hover,
-    .menu .header-bar-color .header-bar .history .payment-tab > a:hover {
-        background-color: grey;
+    .menu .header-bar-color .header-bar .history > div:hover,
+    .menu .header-bar-color .header-bar .history > div:hover,
+    .menu .header-bar-color .header-bar .history > div:hover,
+    .menu .header-bar-color .header-bar .history > div:hover {
+        height: 25px;
+        background-color: silver;
     }
     .history-tab{
-        width: 60px;
-        margin-top: 8px;
+        width: 58px;
         float: left;
     }
     .member-tab{
-        width: 120px;
-        margin-top: 8px;
+        width: 116px;
         float: left;
     }
     .payment-detail-tab{
-        width: 104px;
-        margin-top: 8px;
+        width: 110px;
         float: left;
     }
     .payment-tab{
-        width: 100px;
-        margin-top: 8px;
+        width: 66px;
         float: left;
     }
     .field{
@@ -74,6 +72,10 @@
         width: 400px;
         border-style: solid;
         border-width: 3px;
+    }
+    #logout{
+        margin-left:850px;
+        margin-top:3px;
     }
     /*
     input{

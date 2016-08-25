@@ -1,4 +1,3 @@
-
 <?php
 include('session1.php');
 ?>
@@ -8,115 +7,135 @@ include('session1.php');
 <head>
     <title>Payment</title>
     <link rel="stylesheet" href="payment.css">
-    </head>
+    <script src="http://localhost/php/newtask/payment_validation.js"></script>
+</head>
 <body>
     <div class="header-bar">
         <div class="header-option">
             <a href="Entry.php">Home</a>
-        </div>	
+        </div>
+        <div class="logout">
+				<input name="logout" type="button" id="logout" value="logout" onclick="window.location='logout1.php'" >
+		</div>	
     </div>
 
-<?php 
-$data['date']=$data['members']=$data['items']=$data['paid']=$data['amount']=$data['per_head']="";
+<?php
+$_POST['date'] = $_POST['mpaid'] = $_POST['member'] = $select_memberErr = "";
 
-	$conn = mysqli_connect('localhost','root','','test');
-			mysqli_select_db($conn,"test");
+//fetch query
+    $conn = mysqli_connect('localhost','root','','test');
+            mysqli_select_db($conn,"test");
+            
+    if(!empty($_POST['select_member'])){
+            
+            $query1 = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['select_member']."%'";
+            
+            $result1 = mysqli_query($conn,$query1);
+            $balance1 = mysqli_fetch_array($result1);
+            
+            if(empty($balance1['Balance'])){
+            $query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_POST['select_member']."%'";
+            
+            $result = mysqli_query($conn,$query);
+            $balance = mysqli_fetch_array($result);
 
-				$query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_SESSION['login_user']."%'";
-                $mamount = "SELECT balance FROM payment_table WHERE member_name LIKE '%".$_SESSION['login_user']."%' ORDER BY balance DESC";
-                	
-				$result = mysqli_query($conn,$query);
-                $samount = mysqli_query($conn,$mamount);
+            $balance['Balance'] = "";
+
+            } else {
+                $query = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['select_member']."%'";
+                
+                $result = mysqli_query($conn,$query);
                 $balance = mysqli_fetch_array($result);
-                $bamount = mysqli_fetch_array($samount);  
-?>
+                
+                $balance['SUM(per_head)'] = "";
+            }                
+    } else {
+        $balance['SUM(per_head)'] = "";
+        $balance['Balance'] = "";
+    }
+?>    
+
+<!--                              Table of fetch amount                                                -->
     <div class="member-detail">
         <form class="selected-member" method="POST" action="">
-            <fieldset>
+            <fieldset style="height:80px;">
                 <legend><h3>Member Detail</h3></legend>
                 <table>
                     <tr>
-                        <!-- Name of member paying money-->
+<!-- Name of member to find amount-->
                         <td>Member:</td>
-                        <td><select name="member" id="mSelect" style="width:145px;">
+                        <td><select name="select_member" id="select_member" style="width:155px;">
                                 <option></option>
-                    <?php
-                                $conn = mysqli_connect('localhost','root','','test');
-                                mysqli_select_db($conn,"test");
-
+                             <?php
                                 $edit = "SELECT User FROM selected_members ";				
                                     
                                 $result = mysqli_query($conn,$edit);
                                 while($row = mysqli_fetch_array($result)) {
-                    ?>
+                             ?>
                                 <option><?php echo $row["User"] ; } ?></option>  
-                    </select></td>
-                        <td><span id="var_mSelect" style="color:red;"></span></td>
-                        <td><input type="submit" value="submit"></td>
+                             </select></td>
+                        <td style="width:50px;"><td>
+<!--Fetch total amount of selected member-->
+                        <td>Amount:</td>
+                        <td style="text-align:center;"><b>
+                            <span><?php echo $balance['SUM(per_head)']; 
+                                        echo $balance['Balance']; ?></span></b><td>
+                        <td style="width:50px;"></td>     
+<!--button of fetch amount-->
+                        <td><button type="submit" name="fetch_amount" value="amount" onclick="revalidate">Amount</button></td>
+                    </tr>    
+                    <tr>
+                        <td></td>
+                        <td><span id="var_select_member" class="error"><?php echo $select_memberErr ; ?></span><td>
                     </tr>  
                 </table>      
             </fieldset>
             </form>
-        </div>   
-        <script src="http://localhost/php/newtask/payment_validation.js"></script>
-
-
-<div class="payment-div"> 
-        <div>       
-    <form class="payment" method="POST" action="" onSubmit="return validate()" >  
-        <fieldset>
-            <legend><h3>payment screen</h3></legend> 
-    <table>
-        <tr>
-            <!-- Total amount of login member -->
-            <td>Total Amount : </td>
-            <td style="text-align:center;"><b><?php echo $balance['SUM(per_head)']; ?></b></td>
-        </tr>
-        <tr>
-            <!-- balance amount of login member -->
-            <td>Balance Amount : </td>
-            <td style="text-align:center;"><b><?php echo $bamount['balance']; ?></b></td>
-        </tr>           
-        <tr>
-            <!-- Date of new payment-->
-            <td>Date:</td>
-            <td><input type="date" name="date" id="date"></td>
-            <td><span id="var_date" style="color:red;"></span></td>
-        </tr>    
-        <tr>
-            <!-- Name of member paying money-->
-            <td>Member:</td>
-            <td><select name="member" id="mSelect" style="width:145px;">
+        </div>  
+<!--                               Submit data form starts                                       -->         
+    <div class="payment-div">
+        <form class="payment" action="" method="POST" >
+            <fieldset>
+                <legend><h3>Payment Screen</h3></legend>
+                    <table>
+                        <tr>
+<!--insert date of payment-->
+                            <td>Date:</td>
+                            <td><input type="date" name="date" id="date"></td>
+                            <td><span id="var_date" class="error"></span></td>
+                        </tr>
+                        <tr>
+<!--insert member name of payment-->
+                            <td>Member:</td>
+                            <td><select name="member" id="member" style="width:145px;">
                     <option></option>
-        <?php
-                    $conn = mysqli_connect('localhost','root','','test');
-                    mysqli_select_db($conn,"test");
-
-                    $edit = "SELECT User FROM selected_members ";				
+        <?php   $edit = "SELECT User FROM selected_members ";				
                         
                     $result = mysqli_query($conn,$edit);
                     while($row = mysqli_fetch_array($result)) {
         ?>
                     <option><?php echo $row["User"] ; } ?></option>  
         </select></td>
-            <td><span id="var_mSelect" style="color:red;"></span></td>
-        </tr>    
-        <tr>
-            <!-- deduct paid amount -->
-            <td>Amount Paid:</td>
-            <td><input type="number" name="mpaid" id="mpaid" style="width:140px;"></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="submit"></td>
-        </tr>
-    </table>        
-    </fieldset>
-    </form>  
-    </div>  
-</div>
+            <td><span id="var_member" class="error"></span></td>        
+                        </tr>
+                        <tr>
+<!--insert amount -->
+                            <td>Amount paid:</td>
+                            <td><input type="text" name="mpaid" id="mpaid"></td>
+                            <td><span id="var_mpaid" class="error"></span></td>
+                        </tr>    
+                        <tr>
+                            <td></td>
+<!--submit button of insert data-->
+                            <td><input type="submit" name="submit_data" value="paid" onclick="return validate()" style="width:80px;"></td>
+                        </tr>
+                    </table>
+            </fieldset>
+        </form>
+        </div>  
+
 <?php
-    if($_POST){
+    if(!empty($_POST['date'] || $_POST['member'] || $_POST['mpaid'])) {
                     
                 $servername = "localhost";
                 $username = "root";
@@ -128,32 +147,53 @@ $data['date']=$data['members']=$data['items']=$data['paid']=$data['amount']=$dat
                         // Check connection
                         if ($conn->connect_error) {
                             die("Connection failed: " . $conn->connect_error);
-                        } 
+                        }
+                                                         
+                    $query1 = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['member']."%'";
+            
+                    $result1 = mysqli_query($conn,$query1);
+                    $balance1 = mysqli_fetch_array($result1);
+                    
+                    if(empty($balance1['Balance'])){
+                        $query = "SELECT SUM(per_head) FROM lunch_system WHERE members LIKE '%".$_POST['member']."%'";
                         
-                       $sub=$balance['SUM(per_head)'] - $_POST['mpaid'] ;
+                        $result = mysqli_query($conn,$query);
+                        $balance = mysqli_fetch_array($result);
+
+                        $balance['Balance'] = "";
+                        $payment = $balance['SUM(per_head)'];
+                        $sub = $balance['SUM(per_head)'] - $_POST['mpaid'] ;
+                        
+                        } else {
+                            $query = "SELECT Balance FROM selected_members WHERE User LIKE '%".$_POST['member']."%'";
+                            
+                            $result = mysqli_query($conn,$query);
+                            $balance = mysqli_fetch_array($result);
+                            
+                            $balance['SUM(per_head)'] = "";
+                            $payment = $balance['Balance'];
+                            $sub = $balance1['Balance'] - $_POST['mpaid'] ;
+                        }                
                                 
-            $fetch="INSERT INTO payment_table(date, member_name, payment, total_amount, balance)
-                    VALUES ('".$_POST['date']."','".$_POST['member']."','".$_POST['mpaid']."','".$balance['SUM(per_head)']."','".$sub."')";
-            $mdata="INSERT INTO selected_members(Balance)
-                    VALUES ('".$sub."')
-                    WHERE User LIKE '".$_POST['member']."' ";        
-           
-                if ($conn->query($mdata) === TRUE) {
-                        echo "New record created in members data";
-                    } else {
-					echo "Error: " . $mdata . "<br>" . $conn->error;
-				}
-               
-                if ($conn->query($fetch) === TRUE) {
-                        echo "New record created in system";
-                    } else {
-					echo "Error: " . $fetch . "<br>" . $conn->error;
-				}                                    
-            $conn->close();
+                    $insert = "INSERT INTO payment_table(date, member_name, payment, paid, balance)
+                              VALUES ('".$_POST['date']."','".$_POST['member']."','".$payment."','".$_POST['mpaid']."','".$sub."')"; 
+                    $fetch = "UPDATE selected_members SET Balance = '".$sub."'
+                              WHERE User = '".$_POST['member']."' ";
+                        
+             if ($conn->query($insert) === TRUE) {    
+                    echo "New record created";  
+             } else {
+		        echo "Error: " . $fetch . "<br>" . $conn->error;
+		     }
+             echo "<br>";
+             if ($conn->query($fetch) === TRUE) {    
+                    echo "New record updated in member's account";  
+             } else {
+		        echo "Error: " . $fetch . "<br>" . $conn->error;
+		     }       
+        $conn->close();
     }
-?> 
-
-
+?>
    
 </body>
 </html>

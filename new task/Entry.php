@@ -21,7 +21,6 @@ include('session1.php');
         var resultText = value/count ;
         console.log("resultText :"+resultText);
         document.getElementById("resultHere").value=resultText;
-        
     }
 </script>
 
@@ -34,23 +33,22 @@ include('session1.php');
         <div class="header-bar">
             <div class="history">    
                 <div class="history-tab">
-                    <a href="data.php">History</a>
+                    <a href="data.php" style="margin-left:5px;">History</a>
                 </div>     
                 <div class="member-tab"> 
-                    <a href="member_data.php">Member History</a> &nbsp;
+                    <a href="member_data.php" style="margin-left:5px;">Member History</a> 
                 </div>
                 <div class="payment-detail-tab">
-                    <a href="Payment_details.php">Payment Page</a> &nbsp;
+                    <a href="Payment_details.php" style="margin-left:5px;">Search By Date</a> 
                 </div>
                 <div class="payment-tab">
-                    <a href="Payment.php">Payment</a>
+                    <a href="Payment.php" style="margin-left:5px;">Payment</a>
                 </div>
-                <input name="logout" type="button" id="logout" value="logout" style="margin-left:830px;margin-top:3px;" onclick="window.location='logout1.php'" >
+                <input name="logout" type="button" id="logout" value="logout" onclick="window.location='logout1.php'" >
             </div>
         </div> 
     </div>             
 <?php
-
 $add = "";
 $dateErr=$memberErr=$mytextErr=$paidErr=$amountErr="";
 $date=$member=$mytext=$paid=$amount="";
@@ -103,7 +101,6 @@ function test_input($data) {
             <input type="date" name="date" id="date">
             </div>
             <span id="var_date" style="color:red;"><?php echo $dateErr;?></span>
-
         <br>
 
         Members:
@@ -127,8 +124,8 @@ function test_input($data) {
                     </select>
             </div>
             <span id="var_mSelect" style="color:red;"><?php echo $memberErr;?></span>
-
         <br>
+
         Items:  
             <div class="align">
                 <div class="input_fields_wrap">   
@@ -141,7 +138,6 @@ function test_input($data) {
                 </div>
             </div>
         <span id="var_mytext" style="color:red;"><?php echo $mytextErr;?></span>
-
         <br>
 
         Paid money:
@@ -161,28 +157,25 @@ function test_input($data) {
                 </select>
             </div>
         <span id="var_paid" style="color:red;"><?php echo $paidErr;?></span>
-
         <br>
+
         Total amount:
         <div class="align">
             <input type="number" name="amount" id="amount" class="countOne" onkeyup="myFunction(this.value)">
             </div>
-        <span id="var_amount" style="color:red;"><?php echo $amountErr;?></span>
-                                
+        <span id="var_amount" style="color:red;"><?php echo $amountErr;?></span>                                
         <br>
 
         Perhead: 
             <div class="align">
                 <input type="text" name="per_head" id="resultHere" readonly>
-                </div>
+            </div>
                                     
                 <br><br>
                 <input type="submit" value="submit">    
                 </div>
             </fieldset>
-        
-        
-        
+                
     <?php
                 if($_POST){
                     
@@ -208,21 +201,13 @@ function test_input($data) {
                     $result = mysqli_query($conn,$query);    
                     $balance = mysqli_fetch_array($result);
                                  
-            if(!empty($balance['Balance'])){
-                
-                    $add = $balance['Balance'] + $_POST['per_head'] ;
-                    $new = "UPDATE selected_members SET Balance = '".$add."'
-                            WHERE User = '".$value."' ";  
-                 
-                 if ($conn->query($new) === TRUE) {
-                        echo "1st New record created in system";
-                    } else {
-					echo "Error: " . $new . "<br>" . $conn->error;
-				}
-                             
-              } 
-                }                
-                    
+                    if(!empty($balance['Balance'])){
+                        
+                            $add = $balance['Balance'] + $_POST['per_head'] ;
+                            $new = "UPDATE selected_members SET Balance = '".$add."'
+                                    WHERE User = '".$value."' ";                               
+                    } 
+                }                                    
                     $new = "INSERT INTO Lunch_system (date, members, items, paid, amount, per_head)
                             VALUES ('".$_POST['date']."', '".$select."', '".$items."', '".$_POST['paid']."', '".$_POST['amount']."', '".$_POST['per_head']."' )";
                     
@@ -230,14 +215,12 @@ function test_input($data) {
                         echo "New record created in system";
                     } else {
 					echo "Error: " . $new . "<br>" . $conn->error;
-				}
+				    }
                                     
             $conn->close();
             }
     ?>
-
         </form>
 	 </div>
-
 </body>
 </html>                               

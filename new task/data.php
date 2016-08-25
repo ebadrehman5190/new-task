@@ -5,12 +5,21 @@ include('session1.php');
 <!doctype html>
 <html>
 <head>
-<title>data</title>
+	<title>data</title>
+	<link rel="stylesheet" href="history.css">
 </head>
 <body>
-    <a href="Entry.php">Home</a>	
-	<input name="logout" type="button" id="logout" value="logout" style="margin-left:860px;" onclick="window.location='logout1.php'" >
-<br><br>    
+	<div class="header-bar">
+		<div class="header-option">
+			<div class="home">
+				<a href="Entry.php">Home</a>	
+			</div>	
+		</div>
+		<div class="logout">
+				<input name="logout" type="button" id="logout" value="logout" onclick="window.location='logout1.php'" >
+		</div>
+	</div>	
+<br>    
 <form action='#' method="post">
 	<?php
 		

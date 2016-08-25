@@ -1,11 +1,7 @@
 <!doctype html>
 <html>
 <head>
-
-<title>
-Sign up form
-</title>
-
+<title>Sign up form</title>
 </head>
 <body>
     <script src="http://localhost/php/newtask/signup_validation.js"></script>
@@ -14,7 +10,7 @@ Sign up form
 $user=$fullname=$email=$pwd=$country=$birthday=$gender=$admin=$message="";
 ?>    
 
-<a href="login1.php">Back</a>    
+<a href="Entry.php">Back</a>    
     <form name="Registration" class="form_title" action="" method="POST" onSubmit="return validation()">
 	<fieldset class="field_set">
 	<legend><h1>Sign up form</h1></legend>

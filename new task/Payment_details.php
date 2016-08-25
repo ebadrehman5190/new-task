@@ -5,46 +5,17 @@ include('session1.php');
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment</title>
-    <style>
-        body{
-             background-image: url(images/images1.jpg);
-             background-repeat: no-repeat;
-             background-size: 1280px 710px;
-        }
-        .payment{
-             height: 130px;
-             margin-top:80px;
-             border-radius: 15px;             
-        }
-        .bg_color{
-            width:33%;
-            margin-left:830px;
-            background-color: #f7f7f7;
-            border-radius: 15px;             
-        }
-        .header-bar{
-            background-color: skyblue;
-            margin-top: 10px;
-            height: 25px;
-        }
-        .header-option{
-            text-align: left;
-            height: 25px;
-            width: 50px;
-            margin-left: 20px; 
-            background-color: #skyblue;
-        }
-        .header-bar .header-option > a{
-            margin-left: 5px;
-        }
-    </style>
+    <title>Search By Date</title>
+    <link rel="stylesheet" href="search_by_date.css">
 </head>
 <body>
     <div class="header-bar">
         <div class="header-option">
             <a href="Entry.php">Home</a>
-        </div>	
+        </div>
+        <div class="logout">
+				<input name="logout" type="button" id="logout" value="logout" onclick="window.location='logout1.php'" >
+		</div>	
     </div>
         <script src="http://localhost/php/newtask/payment_validation.js"></script>
 
